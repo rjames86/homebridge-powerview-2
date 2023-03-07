@@ -331,25 +331,27 @@ PowerViewPlatform.prototype.updateShadeValues = function(shade, current) {
 	}
 
 	// Set the AccessoryInformation service.
-	var service = accessory.getService(Service.AccessoryInformation);
-	service.setCharacteristic(Characteristic.Manufacturer, "Hunter Douglas");
-
-	if (shade.firmware) {
-		with (shade.firmware) {
-			var version = revision.toString() + "." + subRevision.toString() + "." + build.toString();
-
-			service.setCharacteristic(Characteristic.FirmwareRevision, version);
-		}
-	}
+	// var service = accessory.getService(Service.AccessoryInformation);
+	// service.setCharacteristic(Characteristic.Manufacturer, "Hunter Douglas");
+	accessory.getService(Service.AccessoryInformation).setCharacteristic(Characteristic.Manufacturer, "Hunter Douglas")
 
 
-	if (this.hubVersion) {
-		service.setCharacteristic(Characteristic.Model, this.hubVersion);
-	}
+	// if (shade.firmware) {
+	// 	with (shade.firmware) {
+	// 		var version = revision.toString() + "." + subRevision.toString() + "." + build.toString();
 
-	if (this.hubSerialNumber) {
-		service.setCharacteristic(Characteristic.SerialNumber, this.hubSerialNumber);
-	}
+	// 		service.setCharacteristic(Characteristic.FirmwareRevision, version);
+	// 	}
+	// }
+
+
+	// if (this.hubVersion) {
+	// 	service.setCharacteristic(Characteristic.Model, this.hubVersion);
+	// }
+
+	// if (this.hubSerialNumber) {
+	// 	service.setCharacteristic(Characteristic.SerialNumber, this.hubSerialNumber);
+	// }
 
 	return positions;
 }
