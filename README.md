@@ -1,6 +1,6 @@
-# homebridge-powerview
-[![npm](https://img.shields.io/npm/v/homebridge-powerview.svg)](https://www.npmjs.com/package/homebridge-powerview-2)
-[![npm](https://img.shields.io/npm/dt/homebridge-powerview.svg)](https://www.npmjs.com/package/homebridge-powerview-2)
+# homebridge-powerview-2
+[![npm](https://img.shields.io/npm/v/homebridge-powerview-2.svg)](https://www.npmjs.com/package/homebridge-powerview-2)
+[![npm](https://img.shields.io/npm/dt/homebridge-powerview-2.svg)](https://www.npmjs.com/package/homebridge-powerview-2)
 
 **The PowerView homekit integration worked too slow for me and was unresponsive a lot of times thats why i forked this old plugin and made it kinda working again**
 
