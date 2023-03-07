@@ -333,7 +333,7 @@ PowerViewPlatform.prototype.updateShadeValues = function(shade, current) {
 	// Set the AccessoryInformation service.
 	// var service = accessory.getService(Service.AccessoryInformation);
 	// service.setCharacteristic(Characteristic.Manufacturer, "Hunter Douglas");
-	accessory.getService(Service.AccessoryInformation).setCharacteristic(Characteristic.Manufacturer, "Hunter Douglas")
+	// accessory.getService(Service.AccessoryInformation).setCharacteristic(Characteristic.Manufacturer, "Hunter Douglas")
 
 
 	// if (shade.firmware) {
