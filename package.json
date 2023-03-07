@@ -1,17 +1,17 @@
 {
   "name": "homebridge-powerview-2",
   "version": "1.0.0",
-  "description": "Homebridge plugin for Hunter Douglas PowerView shades",
+  "description": "Updated Homebridge plugin for Hunter Douglas PowerView shades",
   "license": "ISC",
   "keywords": [
     "homebridge-plugin"
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/keybuk/homebridge-powerview.git"
+    "url": "git://github.com/owenselles/homebridge-powerview-2.git"
   },
   "bugs": {
-    "url": "http://github.com/keybuk/homebridge-powerview/issues"
+    "url": "http://github.com/owenselles/homebridge-powerview-2/issues"
   },
   "engines": {
     "node": ">=0.12.0",
