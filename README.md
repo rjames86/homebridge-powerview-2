@@ -1,8 +1,10 @@
 # homebridge-powerview
-[![npm](https://img.shields.io/npm/v/homebridge-powerview.svg)](https://www.npmjs.com/package/homebridge-powerview)
-[![npm](https://img.shields.io/npm/dt/homebridge-powerview.svg)](https://www.npmjs.com/package/homebridge-powerview)
+[![npm](https://img.shields.io/npm/v/homebridge-powerview.svg)](https://www.npmjs.com/package/homebridge-powerview-2)
+[![npm](https://img.shields.io/npm/dt/homebridge-powerview.svg)](https://www.npmjs.com/package/homebridge-powerview-2)
 
-**The PowerView Hub now natively supports HomeKit, making this plugin unnecessary. Their support works great in my home, so I will not be maintaining this plugin anymore. Source is left up in case their support doesn't work for someone, and to allow them to fork this plugin as a starting point.**
+**The PowerView homekit integration worked too slow for me and was unresponsive a lot of times thats why i forked this old plugin and made it kinda working again**
+
+**Pull requests welcome!**
 
 This is a plugin for [Homebridge](https://github.com/nfarina/homebridge) to provide [HomeKit](https://www.apple.com/uk/ios/home/) support for [Hunter Douglas PowerView](https://www.hunterdouglas.com/operating-systems/motorized/powerview-motorization) window shades.
 
@@ -25,7 +27,7 @@ Shades can participate in HomeKit scenes and automations.
 
 2. Install this plugin:
 ```
-npm install -g homebridge-powerview
+npm install -g homebridge-powerview-2
 ```
 3. Add the `PowerView` Platform to your Homebridge `config.json`:
 
