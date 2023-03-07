@@ -8,8 +8,6 @@
 
 This is a plugin for [Homebridge](https://github.com/nfarina/homebridge) to provide [HomeKit](https://www.apple.com/uk/ios/home/) support for [Hunter Douglas PowerView](https://www.hunterdouglas.com/operating-systems/motorized/powerview-motorization) window shades.
 
-You can download it from [npm](https://www.npmjs.com/package/homebridge-powerview).
-
 Supports both the Generation 1 and 2 hubs.
 
 Supported Shades:
