@@ -181,7 +181,7 @@ PowerViewPlatform.prototype.configureShadeAccessory = function(accessory) {
 	if (accessory.context.shadeType == Shade.HORIZONTAL) {
 		service
 			.getCharacteristic(Characteristic.CurrentHorizontalTiltAngle)
-			.setProps({ minValue: 0 })
+			.setProps({ minValue: -90 })
 			.removeAllListeners('get')
 			.on('get', this.getPosition.bind(this, accessory.context.shadeId, Position.VANES));
 
