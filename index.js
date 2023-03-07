@@ -3,7 +3,7 @@ var hub = require('./PowerViewHub'),
 	Position = hub.Position;
 var Accessory, Service, Characteristic, UUIDGen;
 
-let ShadePollIntervalMs = 60000;
+let ShadePollIntervalMs = 30000;
 
 let Shade = {
 	ROLLER: 1,
@@ -13,10 +13,10 @@ let Shade = {
 }
 
 let ShadeTypes = {
-	ROLLER: [ 1, 5, 42 ],
-	TOP_BOTTOM: [ 8 ],
-	HORIZONTAL: [ 18, 23 ],
-	VERTICAL: [ 16 ]
+	ROLLER: [1, 5, 42],
+	TOP_BOTTOM: [8],
+	HORIZONTAL: [18, 23],
+	VERTICAL: [16]
 }
 
 let SubType = {
@@ -33,7 +33,7 @@ let SubType = {
 //   "signalStrength": 4,
 
 
-module.exports = function(homebridge) {
+module.exports = function (homebridge) {
 	Accessory = homebridge.platformAccessory;
 
 	Service = homebridge.hap.Service;
@@ -63,7 +63,7 @@ function PowerViewPlatform(log, config, api) {
 		this.forceHorizontalShades = config["forceHorizontalShades"] || [];
 		this.forceVerticalShades = config["forceVerticalShades"] || [];
 
-		this.api.on('didFinishLaunching', function() {
+		this.api.on('didFinishLaunching', function () {
 			this.updateHubInfo();
 			if (this.pollShadesForUpdate) {
 				this.pollShades();
@@ -75,7 +75,7 @@ function PowerViewPlatform(log, config, api) {
 }
 
 // Returns the Shade type from the given shade data.
-PowerViewPlatform.prototype.shadeType = function(shade) {
+PowerViewPlatform.prototype.shadeType = function (shade) {
 	if (this.forceRollerShades.includes(shade.id))
 		return Shade.ROLLER;
 	if (this.forceTopBottomShades.includes(shade.id))
@@ -100,7 +100,7 @@ PowerViewPlatform.prototype.shadeType = function(shade) {
 
 
 // Called when a cached accessory is loaded to set up callbacks.
-PowerViewPlatform.prototype.configureAccessory = function(accessory) {
+PowerViewPlatform.prototype.configureAccessory = function (accessory) {
 	this.log("Cached shade %d: %s", accessory.context.shadeId, accessory.displayName);
 
 	accessory.reachable = true;
@@ -119,7 +119,7 @@ PowerViewPlatform.prototype.configureAccessory = function(accessory) {
 }
 
 // Adds a new shade accessory.
-PowerViewPlatform.prototype.addShadeAccessory = function(shade) {
+PowerViewPlatform.prototype.addShadeAccessory = function (shade) {
 	var name = Buffer.from(shade.name, 'base64').toString();
 	this.log("Adding shade %d: %s", shade.id, name);
 
@@ -136,7 +136,7 @@ PowerViewPlatform.prototype.addShadeAccessory = function(shade) {
 }
 
 // Updates an existing shade accessory.
-PowerViewPlatform.prototype.updateShadeAcccessory = function(shade) {
+PowerViewPlatform.prototype.updateShadeAcccessory = function (shade) {
 	var accessory = this.accessories[shade.id];
 	this.log("Updating shade %d: %s", shade.id, accessory.displayName);
 
@@ -152,7 +152,7 @@ PowerViewPlatform.prototype.updateShadeAcccessory = function(shade) {
 }
 
 // Removes an accessory from the platform.
-PowerViewPlatform.prototype.removeShadeAccessory = function(accessory) {
+PowerViewPlatform.prototype.removeShadeAccessory = function (accessory) {
 	this.log("Removing shade %d: %s", accessory.context.shadeId, accessory.displayName);
 	this.api.unregisterPlatformAccessories("homebridge-powerview", "PowerView", [accessory]);
 
@@ -160,7 +160,7 @@ PowerViewPlatform.prototype.removeShadeAccessory = function(accessory) {
 }
 
 // Sets up callbacks for a shade accessory.
-PowerViewPlatform.prototype.configureShadeAccessory = function(accessory) {
+PowerViewPlatform.prototype.configureShadeAccessory = function (accessory) {
 	var shadeId = accessory.context.shadeId;
 	this.accessories[shadeId] = accessory;
 
@@ -250,17 +250,17 @@ PowerViewPlatform.prototype.configureShadeAccessory = function(accessory) {
 }
 
 // Updates the values of shade accessory characteristics.
-PowerViewPlatform.prototype.updateShadeValues = function(shade, current) {
+PowerViewPlatform.prototype.updateShadeValues = function (shade, current) {
 	var accessory = this.accessories[shade.id];
 
 	var positions = null;
 	if (shade.positions) {
-		this.log("Set for", shade.id, {'positions': shade.positions});
+		this.log("Set for", shade.id, { 'positions': shade.positions });
 		positions = {};
 
-		for (var i = 1; shade.positions['posKind'+i]; ++i) {
-			var position = shade.positions['posKind'+i];
-			var hubValue = shade.positions['position'+i];
+		for (var i = 1; shade.positions['posKind' + i]; ++i) {
+			var position = shade.positions['posKind' + i];
+			var hubValue = shade.positions['position' + i];
 
 			if (position == Position.BOTTOM) {
 				positions[Position.BOTTOM] = Math.round(100 * hubValue / 65535);
@@ -288,10 +288,11 @@ PowerViewPlatform.prototype.updateShadeValues = function(shade, current) {
 			if (position == Position.VANES && accessory.context.shadeType == Shade.HORIZONTAL) {
 				positions[Position.VANES] = Math.round(90 * hubValue / 32767);
 
-				var service = accessory.getServiceByUUIDAndSubType(Service.WindowCovering, SubType.BOTTOM);
+				var service = accessory.getServiceByUUIDAndSubType(Service.WindowCovering, SubType.BOTTOM);			  
 
 				// Once we have a vane position, the shade must be closed.
 				if (current)
+				console.log("Current position: ", positions[Position.VANES]);
 					service.setCharacteristic(Characteristic.CurrentPosition, 0);
 				service.updateCharacteristic(Characteristic.TargetPosition, 0);
 				service.setCharacteristic(Characteristic.PositionState, Characteristic.PositionState.STOPPED);
@@ -330,36 +331,18 @@ PowerViewPlatform.prototype.updateShadeValues = function(shade, current) {
 		}
 	}
 
-	// Set the AccessoryInformation service.
-	// var service = accessory.getService(Service.AccessoryInformation);
-	// service.setCharacteristic(Characteristic.Manufacturer, "Hunter Douglas");
-	// accessory.getService(Service.AccessoryInformation).setCharacteristic(Characteristic.Manufacturer, "Hunter Douglas")
-
-
-	// if (shade.firmware) {
-	// 	with (shade.firmware) {
-	// 		var version = revision.toString() + "." + subRevision.toString() + "." + build.toString();
-
-	// 		service.setCharacteristic(Characteristic.FirmwareRevision, version);
-	// 	}
-	// }
-
-
-	// if (this.hubVersion) {
-	// 	service.setCharacteristic(Characteristic.Model, this.hubVersion);
-	// }
-
-	// if (this.hubSerialNumber) {
-	// 	service.setCharacteristic(Characteristic.SerialNumber, this.hubSerialNumber);
-	// }
+	// your accessory must have an AccessoryInformation service
+	this.informationService = new this.api.hap.Service.AccessoryInformation()
+		.setCharacteristic(this.api.hap.Characteristic.Manufacturer, "Hunter Douglas")
+		.setCharacteristic(this.api.hap.Characteristic.Model, this.hubVersion);
 
 	return positions;
 }
 
 
 // Gets the current set of shades, and updates the accessories.
-PowerViewPlatform.prototype.updateShades = function(callback) {
-	this.hub.getShades(function(err, shadeData) {
+PowerViewPlatform.prototype.updateShades = function (callback) {
+	this.hub.getShades(function (err, shadeData) {
 		if (!err) {
 			var newShades = [];
 			for (var shade of shadeData) {
@@ -384,17 +367,17 @@ PowerViewPlatform.prototype.updateShades = function(callback) {
 }
 
 // Regularly polls shades for changes.
-PowerViewPlatform.prototype.pollShades = function() {
-	this.updateShades(function() {
-		setTimeout(function() {
+PowerViewPlatform.prototype.pollShades = function () {
+	this.updateShades(function () {
+		setTimeout(function () {
 			this.pollShades();
 		}.bind(this), ShadePollIntervalMs);
 	}.bind(this));
 }
 
 // Gets the hub information, and updates the accessories.
-PowerViewPlatform.prototype.updateHubInfo = function(callback) {
-	this.hub.getUserData(function(err, userData) {
+PowerViewPlatform.prototype.updateHubInfo = function (callback) {
+	this.hub.getUserData(function (err, userData) {
 		if (!err) {
 			this.hubName = Buffer.from(userData.hubName, 'base64').toString();
 			this.hubSerialNumber = userData.serialNumber;
@@ -413,8 +396,8 @@ PowerViewPlatform.prototype.updateHubInfo = function(callback) {
 }
 
 // Gets the current shade information, and updates values.
-PowerViewPlatform.prototype.updateShade = function(shadeId, refresh = false, callback) {
-	this.hub.getShade(shadeId, refresh, function(err, shade) {
+PowerViewPlatform.prototype.updateShade = function (shadeId, refresh = false, callback) {
+	this.hub.getShade(shadeId, refresh, function (err, shade) {
 		if (!err) {
 			var positions = this.updateShadeValues(shade);
 			var timedOut = refresh ? shade.timedOut : null;
@@ -426,8 +409,8 @@ PowerViewPlatform.prototype.updateShade = function(shadeId, refresh = false, cal
 }
 
 // Gets a single shade position, updating values along the way.
-PowerViewPlatform.prototype.updatePosition = function(shadeId, position, refresh = false, callback) {
-	this.updateShade(shadeId, refresh, function(err, positions, timedOut) {
+PowerViewPlatform.prototype.updatePosition = function (shadeId, position, refresh = false, callback) {
+	this.updateShade(shadeId, refresh, function (err, positions, timedOut) {
 		if (!err) {
 			// Treat a number of other issues as errors.
 			if (refresh && timedOut) {
@@ -445,8 +428,8 @@ PowerViewPlatform.prototype.updatePosition = function(shadeId, position, refresh
 }
 
 // Jogs the shade to update the shade information, and updates values.
-PowerViewPlatform.prototype.jogShade = function(shadeId, callback) {
-	this.hub.jogShade(shadeId, function(err, shade) {
+PowerViewPlatform.prototype.jogShade = function (shadeId, callback) {
+	this.hub.jogShade(shadeId, function (err, shade) {
 		if (!err) {
 			var positions = this.updateShadeValues(shade);
 			if (callback) callback(null, positions);
@@ -458,10 +441,10 @@ PowerViewPlatform.prototype.jogShade = function(shadeId, callback) {
 
 
 // Characteristic callback for CurrentPosition.get
-PowerViewPlatform.prototype.getPosition = function(shadeId, position, callback) {
+PowerViewPlatform.prototype.getPosition = function (shadeId, position, callback) {
 	this.log("getPosition %d/%d", shadeId, position);
 
-	this.updatePosition(shadeId, position, this.refreshShades, function(err, value) {
+	this.updatePosition(shadeId, position, this.refreshShades, function (err, value) {
 		if (!err) {
 			// If we're not refreshing by default, try again with a refresh.
 			if (!this.refreshShades && value == null) {
@@ -477,7 +460,7 @@ PowerViewPlatform.prototype.getPosition = function(shadeId, position, callback) 
 }
 
 // Characteristic callback for TargetPosition.set
-PowerViewPlatform.prototype.setPosition = function(shadeId, position, value, callback) {
+PowerViewPlatform.prototype.setPosition = function (shadeId, position, value, callback) {
 	this.log("setPosition %d/%d = %d", shadeId, position, value);
 	switch (position) {
 		case Position.BOTTOM:
@@ -496,7 +479,7 @@ PowerViewPlatform.prototype.setPosition = function(shadeId, position, value, cal
 			break;
 	}
 
-	this.hub.putShade(shadeId, position, hubValue, value, function(err, shade) {
+	this.hub.putShade(shadeId, position, hubValue, value, function (err, shade) {
 		if (!err) {
 			this.updateShadeValues(shade, true);
 			callback(null);
