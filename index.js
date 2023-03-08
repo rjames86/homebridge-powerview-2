@@ -268,24 +268,24 @@ PowerViewPlatform.prototype.updateShadeValues = function (shade, current) {
 				var service = accessory.getServiceByUUIDAndSubType(Service.WindowCovering, SubType.BOTTOM);
 
 				if (current) {
-					console.log("Setting CurrentPosition to:", positions[Position.BOTTOM]);
+					this.log("Setting CurrentPosition to:", positions[Position.BOTTOM]);
 
 					if (!isNaN(positions[Position.BOTTOM])) {
 						service.setCharacteristic(Characteristic.CurrentPosition, positions[Position.BOTTOM]);
 					} else {
-						console.error("Invalid position value:", positions[Position.BOTTOM]);
+						this.log("Invalid position value:", positions[Position.BOTTOM]);
 					}
 				}
 
-				console.log("Setting TargetPosition to:", positions[Position.BOTTOM]);
+				this.log("Setting TargetPosition to:", positions[Position.BOTTOM]);
 
 				if (!isNaN(positions[Position.BOTTOM])) {
 					service.updateCharacteristic(Characteristic.TargetPosition, positions[Position.BOTTOM]);
 				} else {
-					console.error("Invalid position value:", positions[Position.BOTTOM]);
+					this.log("Invalid position value:", positions[Position.BOTTOM]);
 				}
 
-				console.log("Setting PositionState to:", Characteristic.PositionState.STOPPED);
+				this.log("Setting PositionState to:", Characteristic.PositionState.STOPPED);
 				service.setCharacteristic(Characteristic.PositionState, Characteristic.PositionState.STOPPED);
 
 				if (accessory.context.shadeType == Shade.HORIZONTAL) {
@@ -296,7 +296,7 @@ PowerViewPlatform.prototype.updateShadeValues = function (shade, current) {
 					if (!isNaN(0)) {
 						service.updateCharacteristic(Characteristic.TargetHorizontalTiltAngle, 0);
 					} else {
-						console.error("Invalid tilt angle value:", 0);
+						this.log("Invalid tilt angle value:", 0);
 					}
 				}
 
@@ -308,7 +308,7 @@ PowerViewPlatform.prototype.updateShadeValues = function (shade, current) {
 					if (!isNaN(0)) {
 						service.updateCharacteristic(Characteristic.TargetVerticalTiltAngle, 0);
 					} else {
-						console.error("Invalid tilt angle value:", 0);
+						this.log("Invalid tilt angle value:", 0);
 					}
 				}
 			}
@@ -326,21 +326,21 @@ PowerViewPlatform.prototype.updateShadeValues = function (shade, current) {
 				service.setCharacteristic(Characteristic.PositionState, Characteristic.PositionState.STOPPED);
 
 				if (current) {
-					console.log("Setting CurrentHorizontalTiltAngle to:", positions[Position.VANES]);
+					this.log("Setting CurrentHorizontalTiltAngle to:", positions[Position.VANES]);
 
 					if (!isNaN(positions[Position.VANES])) {
 						service.setCharacteristic(Characteristic.CurrentHorizontalTiltAngle, positions[Position.VANES]);
 					} else {
-						console.error("Invalid vane position value:", positions[Position.VANES]);
+						this.log("Invalid vane position value:", positions[Position.VANES]);
 					}
 				}
 
-				console.log("Setting TargetHorizontalTiltAngle to:", positions[Position.VANES]);
+				this.log("Setting TargetHorizontalTiltAngle to:", positions[Position.VANES]);
 
 				if (!isNaN(positions[Position.VANES])) {
 					service.updateCharacteristic(Characteristic.TargetHorizontalTiltAngle, positions[Position.VANES]);
 				} else {
-					console.error("Invalid vane position value:", positions[Position.VANES]);
+					this.log("Invalid vane position value:", positions[Position.VANES]);
 				}
 
 			}
@@ -468,7 +468,7 @@ PowerViewPlatform.prototype.updatePosition = function (shadeId, position, refres
 						callback(null, positions[position]);
 						this.log("updatePosition %d/%d: %d", shadeId, position, positions[position]);
 					} else {
-						callback(new Error("Invalid position value received"));
+						// callback(new Error("Invalid position value received"));
 						this.log("Invalid position value received for %d/%d", shadeId, position);
 					}
 				}
