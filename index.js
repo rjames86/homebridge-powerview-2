@@ -468,7 +468,8 @@ PowerViewPlatform.prototype.updatePosition = function (shadeId, position, refres
 						callback(null, positions[position]);
 						this.log("updatePosition %d/%d: %d", shadeId, position, positions[position]);
 					} else {
-						// callback(new Error("Invalid position value received"));
+						// set postion to 0
+						callback(null, 0);
 						this.log("Invalid position value received for %d/%d", shadeId, position);
 					}
 				}
