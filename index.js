@@ -267,23 +267,52 @@ PowerViewPlatform.prototype.updateShadeValues = function (shade, current) {
 
 				var service = accessory.getServiceByUUIDAndSubType(Service.WindowCovering, SubType.BOTTOM);
 
-				if (current)
-					service.setCharacteristic(Characteristic.CurrentPosition, positions[Position.BOTTOM]);
-				service.updateCharacteristic(Characteristic.TargetPosition, positions[Position.BOTTOM]);
+				if (current) {
+					console.log("Setting CurrentPosition to:", positions[Position.BOTTOM]);
+
+					if (!isNaN(positions[Position.BOTTOM])) {
+						service.setCharacteristic(Characteristic.CurrentPosition, positions[Position.BOTTOM]);
+					} else {
+						console.error("Invalid position value:", positions[Position.BOTTOM]);
+					}
+				}
+
+				console.log("Setting TargetPosition to:", positions[Position.BOTTOM]);
+
+				if (!isNaN(positions[Position.BOTTOM])) {
+					service.updateCharacteristic(Characteristic.TargetPosition, positions[Position.BOTTOM]);
+				} else {
+					console.error("Invalid position value:", positions[Position.BOTTOM]);
+				}
+
+				console.log("Setting PositionState to:", Characteristic.PositionState.STOPPED);
 				service.setCharacteristic(Characteristic.PositionState, Characteristic.PositionState.STOPPED);
 
 				if (accessory.context.shadeType == Shade.HORIZONTAL) {
-					if (current)
-						service.setCharacteristic(Characteristic.CurrentHorizontalTiltAngle, 0)
-					service.updateCharacteristic(Characteristic.TargetHorizontalTiltAngle, 0);
+					if (current) {
+						service.setCharacteristic(Characteristic.CurrentHorizontalTiltAngle, 0);
+					}
+
+					if (!isNaN(0)) {
+						service.updateCharacteristic(Characteristic.TargetHorizontalTiltAngle, 0);
+					} else {
+						console.error("Invalid tilt angle value:", 0);
+					}
 				}
 
 				if (accessory.context.shadeType == Shade.VERTICAL) {
-					if (current)
-						service.setCharacteristic(Characteristic.CurrentVerticalTiltAngle, 0)
-					service.updateCharacteristic(Characteristic.TargetVerticalTiltAngle, 0);
+					if (current) {
+						service.setCharacteristic(Characteristic.CurrentVerticalTiltAngle, 0);
+					}
+
+					if (!isNaN(0)) {
+						service.updateCharacteristic(Characteristic.TargetVerticalTiltAngle, 0);
+					} else {
+						console.error("Invalid tilt angle value:", 0);
+					}
 				}
 			}
+
 
 			if (position == Position.VANES && accessory.context.shadeType == Shade.HORIZONTAL) {
 				positions[Position.VANES] = Math.round(90 * hubValue / 32767);
@@ -419,8 +448,8 @@ PowerViewPlatform.prototype.updatePosition = function (shadeId, position, refres
 			} else {
 				if (!positions)
 					this.log("Hub did not return positions for %d/%d", shadeId, position);
-				if (callback) 
-				callback(null, positions ? positions[position] : null);
+				if (callback)
+					callback(null, positions ? positions[position] : null);
 				this.log("updatePosition %d/%d: %d", shadeId, position, positions ? positions[position] : null);
 			}
 		} else {
