@@ -486,7 +486,12 @@ PowerViewPlatform.prototype.jogShade = function (shadeId, callback) {
 	this.hub.jogShade(shadeId, function (err, shade) {
 		if (!err) {
 			var positions = this.updateShadeValues(shade);
-			if (callback) callback(null, positions);
+
+			if (callback) {
+				if (positions && typeof positions[position] === 'number' && isFinite(positions[position])) {
+					callback(null, positions);
+				}
+			}
 		} else {
 			if (callback) callback(err);
 		}
