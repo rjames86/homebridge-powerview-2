@@ -325,9 +325,24 @@ PowerViewPlatform.prototype.updateShadeValues = function (shade, current) {
 				service.updateCharacteristic(Characteristic.TargetPosition, 0);
 				service.setCharacteristic(Characteristic.PositionState, Characteristic.PositionState.STOPPED);
 
-				if (current)
-					service.setCharacteristic(Characteristic.CurrentHorizontalTiltAngle, positions[Position.VANES]);
-				service.updateCharacteristic(Characteristic.TargetHorizontalTiltAngle, positions[Position.VANES]);
+				if (current) {
+					console.log("Setting CurrentHorizontalTiltAngle to:", positions[Position.VANES]);
+
+					if (!isNaN(positions[Position.VANES])) {
+						service.setCharacteristic(Characteristic.CurrentHorizontalTiltAngle, positions[Position.VANES]);
+					} else {
+						console.error("Invalid vane position value:", positions[Position.VANES]);
+					}
+				}
+
+				console.log("Setting TargetHorizontalTiltAngle to:", positions[Position.VANES]);
+
+				if (!isNaN(positions[Position.VANES])) {
+					service.updateCharacteristic(Characteristic.TargetHorizontalTiltAngle, positions[Position.VANES]);
+				} else {
+					console.error("Invalid vane position value:", positions[Position.VANES]);
+				}
+
 			}
 
 			if (position == Position.VANES && accessory.context.shadeType == Shade.VERTICAL) {
@@ -494,6 +509,11 @@ PowerViewPlatform.prototype.getPosition = function (shadeId, position, callback)
 // Characteristic callback for TargetPosition.set
 PowerViewPlatform.prototype.setPosition = function (shadeId, position, value, callback) {
 	this.log("setPosition %d/%d = %d", shadeId, position, value);
+	// Check if value is a valid number
+	if (typeof value !== "number" || isNaN(value) || !isFinite(value)) {
+		callback(new Error("Invalid value: " + value));
+		return;
+	}
 	switch (position) {
 		case Position.BOTTOM:
 			var hubValue = Math.round(65535 * value / 100);
