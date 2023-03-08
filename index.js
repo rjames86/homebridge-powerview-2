@@ -463,9 +463,15 @@ PowerViewPlatform.prototype.updatePosition = function (shadeId, position, refres
 			} else {
 				if (!positions)
 					this.log("Hub did not return positions for %d/%d", shadeId, position);
-				if (callback)
-					callback(null, positions ? positions[position] : null);
-				this.log("updatePosition %d/%d: %d", shadeId, position, positions ? positions[position] : null);
+				if (callback) {
+					if (positions && typeof positions[position] === 'number' && isFinite(positions[position])) {
+						callback(null, positions[position]);
+						this.log("updatePosition %d/%d: %d", shadeId, position, positions[position]);
+					} else {
+						callback(new Error("Invalid position value received"));
+						this.log("Invalid position value received for %d/%d", shadeId, position);
+					}
+				}
 			}
 		} else {
 			if (callback) callback(err);
