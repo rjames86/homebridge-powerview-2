@@ -56,6 +56,7 @@ PowerViewHub.prototype.scheduleRequest = function(delay) {
 				var json = queued.data ? body : JSON.parse(body);
 				for (var callback of queued.callbacks) {
 					callback(null, json.shade);
+					this.log("Callback for", queued.shadeId, json.shade);
 				}
 			} else {
 				if (!err)

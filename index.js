@@ -288,11 +288,10 @@ PowerViewPlatform.prototype.updateShadeValues = function (shade, current) {
 			if (position == Position.VANES && accessory.context.shadeType == Shade.HORIZONTAL) {
 				positions[Position.VANES] = Math.round(90 * hubValue / 32767);
 
-				var service = accessory.getServiceByUUIDAndSubType(Service.WindowCovering, SubType.BOTTOM);			  
+				var service = accessory.getServiceByUUIDAndSubType(Service.WindowCovering, SubType.BOTTOM);
 
 				// Once we have a vane position, the shade must be closed.
 				if (current)
-				console.log("Current position: ", positions[Position.VANES]);
 					service.setCharacteristic(Characteristic.CurrentPosition, 0);
 				service.updateCharacteristic(Characteristic.TargetPosition, 0);
 				service.setCharacteristic(Characteristic.PositionState, Characteristic.PositionState.STOPPED);
@@ -404,6 +403,7 @@ PowerViewPlatform.prototype.updateShade = function (shadeId, refresh = false, ca
 			if (callback) callback(null, positions, timedOut);
 		} else {
 			if (callback) callback(err);
+			this.log("Error getting shade %d: %s", shadeId, err);
 		}
 	}.bind(this));
 }
@@ -419,10 +419,13 @@ PowerViewPlatform.prototype.updatePosition = function (shadeId, position, refres
 			} else {
 				if (!positions)
 					this.log("Hub did not return positions for %d/%d", shadeId, position);
-				if (callback) callback(null, positions ? positions[position] : null);
+				if (callback) 
+				callback(null, positions ? positions[position] : null);
+				this.log("updatePosition %d/%d: %d", shadeId, position, positions ? positions[position] : null);
 			}
 		} else {
 			if (callback) callback(err);
+			this.log("Error %d/%d: %s", shadeId, position, err);
 		}
 	}.bind(this));
 }
