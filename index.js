@@ -526,39 +526,29 @@ PowerViewPlatform.prototype.setPosition = function (shadeId, position, value, ca
 		callback(new Error("Invalid value: " + value));
 		return;
 	}
-
-	// Query current shade state before sending position command to ensure synchronization
-	this.hub.getShade(shadeId, true, function (err, currentShade) {
-		if (err) {
-			this.log("Warning: Could not query shade state before position command, proceeding anyway: %s", err);
-		} else {
-			this.log("Queried current state for shade %d before position command", shadeId);
-		}
-
-		switch (position) {
-			case Position.BOTTOM:
-				var hubValue = Math.round(65535 * value / 100);
-				break;
-			case Position.TOP:
-				var hubValue = Math.round(65535 * value / 100);
-				break;
-			case Position.VANES:
-				var accessory = this.accessories[shadeId];
-				if (accessory.context.shadeType == Shade.VERTICAL) {
-					var hubValue = Math.abs(Math.round(65535 * (value - 90) / 180));
-				} else {
-					var hubValue = Math.round(32767 * value / 90);
-				}
-				break;
-		}
-
-		this.hub.putShade(shadeId, position, hubValue, value, function (err, shade) {
-			if (!err) {
-				this.updateShadeValues(shade, true);
-				callback(null);
+	switch (position) {
+		case Position.BOTTOM:
+			var hubValue = Math.round(65535 * value / 100);
+			break;
+		case Position.TOP:
+			var hubValue = Math.round(65535 * value / 100);
+			break;
+		case Position.VANES:
+			var accessory = this.accessories[shadeId];
+			if (accessory.context.shadeType == Shade.VERTICAL) {
+				var hubValue = Math.abs(Math.round(65535 * (value - 90) / 180));
 			} else {
-				callback(err);
+				var hubValue = Math.round(32767 * value / 90);
 			}
-		}.bind(this));
+			break;
+	}
+
+	this.hub.putShade(shadeId, position, hubValue, value, function (err, shade) {
+		if (!err) {
+			this.updateShadeValues(shade, true);
+			callback(null);
+		} else {
+			callback(err);
+		}
 	}.bind(this));
 }
